@@ -779,7 +779,9 @@ class InstallRequirement:
             assert self.local_file_path
             direct_url = None
             # TODO this can be refactored to direct_url = self.download_info
-            if self.editable:
+            if '_PYTHON_SYSCONFIGDATA_NAME' in os.environ:
+                direct_url = None
+            elif self.editable:
                 direct_url = direct_url_for_editable(self.unpacked_source_directory)
             elif self.original_link:
                 direct_url = direct_url_from_link(
@@ -796,6 +798,7 @@ class InstallRequirement:
                 warn_script_location=warn_script_location,
                 direct_url=direct_url,
                 requested=self.user_supplied,
+                root=root,
             )
             self.install_succeeded = True
             return

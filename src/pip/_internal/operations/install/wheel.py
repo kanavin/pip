@@ -436,6 +436,7 @@ def _install_wheel(
     warn_script_location: bool = True,
     direct_url: Optional[DirectUrl] = None,
     requested: bool = False,
+    root: str = None,
 ) -> None:
     """Install a wheel.
 
@@ -612,7 +613,7 @@ def _install_wheel(
             with warnings.catch_warnings():
                 warnings.filterwarnings("ignore")
                 for path in pyc_source_file_paths():
-                    success = compileall.compile_file(path, force=True, quiet=True)
+                    success = compileall.compile_file(path, force=True, quiet=True, stripdir=root)
                     if success:
                         pyc_path = pyc_output_path(path)
                         assert os.path.exists(pyc_path)
@@ -723,6 +724,7 @@ def install_wheel(
     warn_script_location: bool = True,
     direct_url: Optional[DirectUrl] = None,
     requested: bool = False,
+    root: str = None,
 ) -> None:
     with ZipFile(wheel_path, allowZip64=True) as z:
         with req_error_context(req_description):
@@ -735,4 +737,5 @@ def install_wheel(
                 warn_script_location=warn_script_location,
                 direct_url=direct_url,
                 requested=requested,
+                root=root,
             )
